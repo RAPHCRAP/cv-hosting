@@ -1,0 +1,149 @@
+== caller ==
+{
+    "UserId": "AIDAQBIIU7U5V7WVA53OK",
+    "Account": "002702507323",
+    "Arn": "arn:aws:iam::002702507323:user/cli-user"
+}
+
+== public-access ==
+{
+    "PublicAccessBlockConfiguration": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": true
+    }
+}
+
+== versioning ==
+{
+    "Status": "Enabled"
+}
+
+== objects ==
+2026-10-26 00:41:05   68.0 KiB tenants/23l-3063/site/cv.pdf
+2026-10-26 00:41:01    5.7 KiB tenants/23l-3063/site/index.html
+2026-10-26 00:41:03    3.7 KiB tenants/23l-3063/site/style.css
+
+== ec2-policy ==
+{
+    "RoleName": "cv-ec2-role-23l-3063",
+    "PolicyName": "cv-ec2-read",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ReadTenantObjects",
+                "Effect": "Allow",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::cv-23l-3063/tenants/*"
+            },
+            {
+                "Sid": "ListTenantPrefixesOnly",
+                "Effect": "Allow",
+                "Action": "s3:ListBucket",
+                "Resource": "arn:aws:s3:::cv-23l-3063",
+                "Condition": {
+                    "StringLike": {
+                        "s3:prefix": "tenants/*"
+                    }
+                }
+            }
+        ]
+    }
+}
+
+== lambda-policy ==
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "AWSLambdaBasicExecutionRole",
+            "PolicyArn": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        }
+    ]
+}
+{
+    "RoleName": "cv-lambda-role-23l-3063",
+    "PolicyName": "cv-lambda-read-write",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ReadTenantObjects",
+                "Effect": "Allow",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::cv-23l-3063/tenants/*"
+            },
+            {
+                "Sid": "WriteTenantUploads",
+                "Effect": "Allow",
+                "Action": "s3:PutObject",
+                "Resource": "arn:aws:s3:::cv-23l-3063/tenants/*/site/*"
+            }
+        ]
+    }
+}
+
+== security-group ==
+[
+    [
+        {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "UserIdGroupPairs": [],
+            "IpRanges": [
+                {
+                    "CidrIp": "0.0.0.0/0"
+                }
+            ],
+            "Ipv6Ranges": [],
+            "PrefixListIds": []
+        },
+        {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "UserIdGroupPairs": [],
+            "IpRanges": [
+                {
+                    "CidrIp": "117.102.41.196/32"
+                }
+            ],
+            "Ipv6Ranges": [],
+            "PrefixListIds": []
+        }
+    ]
+]
+
+== instance ==
+[
+    {
+        "type": "t3.micro",
+        "imds": "required",
+        "profile": "arn:aws:iam::002702507323:instance-profile/cv-ec2-role-23l-3063"
+    }
+]
+
+== endpoints ==
+--- http://44.202.250.210/
+http=200 type=text/plain
+--- https://tfx52hveskk4heb2jy4bz5wxxu0ssytl.lambda-url.us-east-1.on.aws/
+http=403 type=application/json
+--- https://cv-23l-3063.s3.amazonaws.com/tenants/
+http=403 type=application/xml
+
+== lambda-logs ==
+2026-10-25T19:45:55.024000+00:00 2026/10/25/[$LATEST]09624ac9fb6f4a1e996366057d9589fd INIT_START Runtime Version: python:3.13.mainlinev2.v43	Runtime Version ARN: arn:aws:lambda:us-east-1::runtime:a0627e8616c4eaf447133f427c7419e5ce3a39ea2bc648ccb6d03d5b7f4d96e7
+2026-10-25T19:45:55.518000+00:00 2026/10/25/[$LATEST]09624ac9fb6f4a1e996366057d9589fd START RequestId: e7ba9b9c-e56d-4399-8bfc-6375ccd2d275 Version: $LATEST
+2026-10-25T19:45:55.653000+00:00 2026/10/25/[$LATEST]09624ac9fb6f4a1e996366057d9589fd {"fn": "cv-func-23l-3063", "path": "/u/23l-3063/", "status": 200, "ms": 134}
+2026-10-25T19:45:55.655000+00:00 2026/10/25/[$LATEST]09624ac9fb6f4a1e996366057d9589fd END RequestId: e7ba9b9c-e56d-4399-8bfc-6375ccd2d275
+2026-10-25T19:45:55.655000+00:00 2026/10/25/[$LATEST]09624ac9fb6f4a1e996366057d9589fd REPORT RequestId: e7ba9b9c-e56d-4399-8bfc-6375ccd2d275	Duration: 136.90 ms	Billed Duration: 628 ms	Memory Size: 256 MB	Max Memory Used: 92 MB	Init Duration: 490.27 ms
+
+== log-retention ==
+[
+    {
+        "name": "/aws/lambda/cv-func-23l-3063",
+        "days": 7
+    }
+]

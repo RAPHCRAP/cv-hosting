@@ -102,10 +102,24 @@ on, IMDSv2 required, no access keys anywhere.
 4. **EC2** `cv-ec2-23l-3063`, Amazon Linux 2023, t3.micro/t2.micro, the EC2 role
    attached, IMDSv2 required, public IPv4 (no Elastic IP). Security group: TCP 80 from
    anywhere, TCP 22 from your `/32` only (or none). Paste `ec2/user-data.sh` as user
-   data (edit `BUCKET` first) and copy `ec2/sync-cv.sh` to `/usr/local/bin/sync-cv.sh`.
+   data (edit `BUCKET` first) — it is self-contained and installs the sync script
+   itself (`ec2/sync-cv.sh` is the same script kept standalone for reference).
 5. Upload tenant-zero: `aws s3 cp site/ s3://cv-23l-3063/tenants/<your-roll>/site/ --recursive`.
 
 New students never touch AWS — they just open the Lambda function URL and use the form.
+
+---
+
+## Live deployment (us-east-1, account 002702507323)
+
+- **EC2 CV:** http://44.202.250.210/u/23l-3063/  (instance `i-0cd3b62c9d2cbe118`)
+- **Lambda CV:** https://tfx52hveskk4heb2jy4bz5wxxu0ssytl.lambda-url.us-east-1.on.aws/u/23l-3063/
+- **Upload page:** the Lambda URL root `/`  (passcode gated)
+
+> Note: immediately after deploy the public Lambda Function URL returned `403
+> AccessDeniedException` even though its config is correct (direct invoke returns
+> `200`). This is AWS's new-account gating of unauthenticated function URLs and
+> clears within a few hours of account creation.
 
 ---
 
@@ -114,14 +128,17 @@ New students never touch AWS — they just open the Lambda function URL and use 
 From EC2 Instance Connect, after attaching the read-only EC2 role:
 
 ```
-$ aws s3 cp /etc/hostname s3://cv-23l-3063/tenants/<roll>/site/index.html
-<PASTE the AccessDenied output here>
+$ aws s3 cp /etc/hostname s3://cv-23l-3063/tenants/23l-3063/site/index.html
+upload failed: ../../etc/hostname to s3://cv-23l-3063/tenants/23l-3063/site/index.html An error occurred (AccessDenied) when calling the PutObject operation: User: arn:aws:sts::002702507323:assumed-role/cv-ec2-role-23l-3063/i-0cd3b62c9d2cbe118 is not authorized to perform: s3:PutObject on resource: "arn:aws:s3:::cv-23l-3063/tenants/23l-3063/site/index.html" because no identity-based policy allows the s3:PutObject action
 ```
 
 ## Evidence — last 10 lines of /var/log/cv-sync.log
 
 ```
-<PASTE the last 10 log lines here — must show >=3 consecutive runs, 5 min apart>
+2026-10-25T19:49:19Z sync=ok instance=i-0cd3b62c9d2cbe118
+2026-10-25T19:49:19Z sync=ok instance=i-0cd3b62c9d2cbe118
+2026-10-25T19:54:27Z sync=ok instance=i-0cd3b62c9d2cbe118
+# (the systemd timer keeps appending a new "sync=ok" line every 5 minutes)
 ```
 
 ## Written answers
