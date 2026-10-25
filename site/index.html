@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV — Your Name</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="cv-header">
+    <h1>Your Full Name</h1>
+    <p class="meta">
+      <span>Roll: 22L-6543</span>
+      <span>&middot;</span>
+      <span><a href="mailto:you@example.com">you@example.com</a></span>
+    </p>
+    <p><a class="pdf-link" href="cv.pdf">Download PDF copy</a></p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Education</h2>
+      <ul>
+        <li><strong>BS Computer Science</strong>, Your University (2022&ndash;2026)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <ul class="skills">
+        <li>AWS (S3, EC2, Lambda, IAM)</li>
+        <li>Python / JavaScript</li>
+        <li>Linux &amp; shell scripting</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+      <ul>
+        <li>
+          <strong>Self-service CV hosting platform</strong> &mdash;
+          one AWS account serving many students' CVs over EC2 and Lambda,
+          routed by URL path, files stored privately in S3.
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="cv-footer">
+    Hosted on: {{HOSTED_ON}}
+  </footer>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# never commit credentials or local config
+*.pem
+*.key
+.env
+cv-sync.env
+.aws/
+
+# editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp
