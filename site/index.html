@@ -3,51 +3,153 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CV — Your Name</title>
+  <title>Abdul Rafay — CV</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="cv-header">
-    <h1>Your Full Name</h1>
-    <p class="meta">
-      <span>Roll: 22L-6543</span>
-      <span>&middot;</span>
-      <span><a href="mailto:you@example.com">you@example.com</a></span>
-    </p>
-    <p><a class="pdf-link" href="cv.pdf">Download PDF copy</a></p>
-  </header>
+  <div class="page">
+    <header class="cv-header">
+      <div class="identity">
+        <h1>Abdul Rafay</h1>
+        <p class="title">Software Engineer &middot; Full-Stack &amp; AI Specialist</p>
+        <p class="roll">Roll No. 23L-3063</p>
+      </div>
+      <a class="pdf-link" href="cv.pdf">Download PDF</a>
+    </header>
 
-  <main>
-    <section>
-      <h2>Education</h2>
-      <ul>
-        <li><strong>BS Computer Science</strong>, Your University (2022&ndash;2026)</li>
-      </ul>
+    <ul class="contact">
+      <li>Lahore, Pakistan</li>
+      <li><a href="mailto:akraph1118@gmail.com">akraph1118@gmail.com</a></li>
+      <li><a href="tel:+923330686779">+92 333 0686779</a></li>
+      <li><a href="https://linkedin.com/in/abdul-raphay/">linkedin.com/in/abdul-raphay</a></li>
+      <li><a href="https://github.com/RAPHCRAP">github.com/RAPHCRAP</a></li>
+    </ul>
+
+    <section class="summary">
+      <p>
+        Forward-thinking Software Engineer (CGPA 3.35, FAST-NUCES) specialising in
+        agentic AI workflows and scalable SaaS architectures. Freelance experience
+        translating complex requirements into production-ready MERN and Python
+        applications with integrated DevOps practices.
+      </p>
     </section>
 
     <section>
       <h2>Skills</h2>
-      <ul class="skills">
-        <li>AWS (S3, EC2, Lambda, IAM)</li>
-        <li>Python / JavaScript</li>
-        <li>Linux &amp; shell scripting</li>
-      </ul>
+      <div class="skill-group">
+        <h3>AI &amp; Machine Learning</h3>
+        <ul class="pills">
+          <li>NLP</li><li>Model Fine-tuning</li><li>PyTorch</li>
+          <li>LangGraph</li><li>Jupyter</li><li>Data Mining</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Full-Stack Development</h3>
+        <ul class="pills">
+          <li>Next.js</li><li>React</li><li>Node.js</li><li>Express.js</li>
+          <li>Django</li><li>Spring Boot</li><li>FastAPI</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Databases &amp; Systems</h3>
+        <ul class="pills">
+          <li>PostgreSQL</li><li>MongoDB</li><li>Distributed Systems</li><li>API Design</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>DevOps &amp; Testing</h3>
+        <ul class="pills">
+          <li>Docker</li><li>Kubernetes</li><li>Selenium</li><li>Pytest</li>
+          <li>JUnit</li><li>Git</li><li>Linux Shell</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Design Tools</h3>
+        <ul class="pills">
+          <li>Figma</li><li>LucidChart</li><li>StarUML</li><li>Adobe Illustrator</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      <article class="entry">
+        <div class="entry-head">
+          <h3>Freelance Software Engineer <span class="muted">(SaaS Products)</span></h3>
+          <span class="dates">2025 &ndash; Present</span>
+        </div>
+        <p class="where">Remote</p>
+        <ul>
+          <li>Engineered production-ready features for SaaS platforms using Next.js and the MERN stack.</li>
+          <li>Implemented secure authentication/authorization systems and scalable REST/FastAPI backends.</li>
+          <li>Automated quality assurance with Selenium and Pytest for reliable client deployments.</li>
+        </ul>
+      </article>
+      <article class="entry">
+        <div class="entry-head">
+          <h3>VR/AR Development Intern</h3>
+          <span class="dates">Jul 2025 &ndash; Aug 2025</span>
+        </div>
+        <p class="where">UTeM Global Project-Based Learning Program, Malaysia</p>
+        <ul>
+          <li>Developed VR/AR prototypes for interactive learning and immersive UI experiences.</li>
+          <li>Collaborated in a cross-functional international team to deliver functional demo applications.</li>
+        </ul>
+      </article>
     </section>
 
     <section>
       <h2>Projects</h2>
-      <ul>
-        <li>
-          <strong>Self-service CV hosting platform</strong> &mdash;
-          one AWS account serving many students' CVs over EC2 and Lambda,
-          routed by URL path, files stored privately in S3.
-        </li>
-      </ul>
+      <article class="entry">
+        <div class="entry-head">
+          <h3>Natural Language Control Layer for CRUD Applications</h3>
+          <span class="tech">LangGraph &middot; Python</span>
+        </div>
+        <ul>
+          <li>Built an AI framework letting users manage web apps with natural language instead of traditional UI flows.</li>
+          <li>Architected agentic workflows with LangGraph to decompose intent, validate schemas, and safely execute backend tasks.</li>
+        </ul>
+      </article>
+      <article class="entry">
+        <div class="entry-head">
+          <h3>Game Vault — Web Library Application</h3>
+          <span class="tech">React &middot; Redux Toolkit</span>
+        </div>
+        <ul>
+          <li>Built a game catalog with personalized progress tracking and IMDb-style interfaces.</li>
+          <li>Optimized state management with Redux Toolkit and a modern glassmorphism UI.</li>
+        </ul>
+      </article>
+      <article class="entry">
+        <div class="entry-head">
+          <h3>CIRKIT — Logic Circuit Simulator</h3>
+          <span class="tech">Java &middot; JavaFX</span>
+        </div>
+        <ul>
+          <li>Developed a virtual simulator for digital logic components with real-time state updates.</li>
+          <li>Enabled user-driven circuit creation through modular, object-oriented architecture.</li>
+        </ul>
+      </article>
     </section>
-  </main>
 
-  <footer class="cv-footer">
-    Hosted on: {{HOSTED_ON}}
-  </footer>
+    <section>
+      <h2>Education</h2>
+      <article class="entry">
+        <div class="entry-head">
+          <h3>BS in Software Engineering</h3>
+          <span class="dates">2023 &ndash; 2027</span>
+        </div>
+        <p class="where">FAST National University of Computer and Emerging Sciences (FAST-NUCES), Lahore</p>
+        <ul>
+          <li>CGPA: 3.35</li>
+          <li>Relevant coursework: Data Structures, Distributed Systems, Database Design, Linear Algebra.</li>
+        </ul>
+      </article>
+    </section>
+
+    <footer class="cv-footer">
+      Hosted on: {{HOSTED_ON}}
+    </footer>
+  </div>
 </body>
 </html>
