@@ -86,24 +86,24 @@ on, IMDSv2 required, no access keys anywhere.
 
 ## Deploy (once)
 
-1. **Bucket** `cv-22l-6543` (add digits if taken), region = class region. Block Public
+1. **Bucket** `cv-23l-3063` (add digits if taken), region = class region. Block Public
    Access all on, versioning enabled, no public policy/ACL. Tag `Owner`, `Course=cloud`.
 2. **IAM** — create both roles from `iam/`:
-   - EC2 role `cv-ec2-role-22l-6543`: trust `ec2-trust-policy.json`, inline permission
+   - EC2 role `cv-ec2-role-23l-3063`: trust `ec2-trust-policy.json`, inline permission
      `ec2-permission-policy.json` (name it `cv-ec2-read`).
-   - Lambda role `cv-lambda-role-22l-6543`: trust `lambda-trust-policy.json`, inline
+   - Lambda role `cv-lambda-role-23l-3063`: trust `lambda-trust-policy.json`, inline
      permission `lambda-permission-policy.json` (name it `cv-lambda-read-write`), plus
      attach the managed `AWSLambdaBasicExecutionRole` for logging.
-   - Replace `cv-22l-6543` in the JSON with your real bucket name.
-3. **Lambda** `cv-func-22l-6543`, Python 3.13, 128–256 MB, timeout 10 s, handler
+   - Replace `cv-23l-3063` in the JSON with your real bucket name.
+3. **Lambda** `cv-func-23l-3063`, Python 3.13, 128–256 MB, timeout 10 s, handler
    `handler.handler`, the Lambda role above. Env vars: `BUCKET`, `PREFIX=tenants`,
    `UPLOAD_PASSCODE=<secret>`, and optionally `EC2_BASE=http://<ec2-ip>`. Create a
    **function URL, auth type NONE**. Set the log group retention to **7 days**.
-4. **EC2** `cv-ec2-22l-6543`, Amazon Linux 2023, t3.micro/t2.micro, the EC2 role
+4. **EC2** `cv-ec2-23l-3063`, Amazon Linux 2023, t3.micro/t2.micro, the EC2 role
    attached, IMDSv2 required, public IPv4 (no Elastic IP). Security group: TCP 80 from
    anywhere, TCP 22 from your `/32` only (or none). Paste `ec2/user-data.sh` as user
    data (edit `BUCKET` first) and copy `ec2/sync-cv.sh` to `/usr/local/bin/sync-cv.sh`.
-5. Upload tenant-zero: `aws s3 cp site/ s3://cv-22l-6543/tenants/<your-roll>/site/ --recursive`.
+5. Upload tenant-zero: `aws s3 cp site/ s3://cv-23l-3063/tenants/<your-roll>/site/ --recursive`.
 
 New students never touch AWS — they just open the Lambda function URL and use the form.
 
@@ -114,7 +114,7 @@ New students never touch AWS — they just open the Lambda function URL and use 
 From EC2 Instance Connect, after attaching the read-only EC2 role:
 
 ```
-$ aws s3 cp /etc/hostname s3://cv-22l-6543/tenants/<roll>/site/index.html
+$ aws s3 cp /etc/hostname s3://cv-23l-3063/tenants/<roll>/site/index.html
 <PASTE the AccessDenied output here>
 ```
 

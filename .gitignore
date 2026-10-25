@@ -5,6 +5,10 @@
 cv-sync.env
 .aws/
 
+# build artifacts
+build-fn.zip
+*.zip
+
 # editor / OS noise
 .DS_Store
 Thumbs.db

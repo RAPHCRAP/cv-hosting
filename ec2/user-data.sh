@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
-# EC2 user data for Amazon Linux 2023.
-# Installs nginx, lays down the path-routing config, installs the sync script
-# on a 5-minute systemd timer, and runs the first sync.
-#
-# EDIT THIS before launch: set BUCKET to your real bucket name.
+# EC2 user data for Amazon Linux 2023 — self-contained.
+# Installs nginx, lays down path-routing config, installs the sync script on a
+# 5-minute systemd timer (embedded below), and runs the first sync.
 set -euxo pipefail
 
-BUCKET="cv-22l-6543"      # <-- change to your bucket
+BUCKET="cv-23l-3063"
 WEBROOT="/srv/www"
 
-dnf -y update
-dnf -y install nginx awscli
+dnf -y install nginx
 
-# --- config consumed by sync-cv.sh (bucket name is not baked into the script) ---
+# config consumed by sync-cv.sh (bucket name not baked into the script)
 cat > /etc/cv-sync.env <<EOF
 BUCKET=${BUCKET}
 EOF
@@ -20,8 +17,8 @@ EOF
 mkdir -p "${WEBROOT}/tenants"
 touch /var/log/cv-sync.log
 
-# --- nginx: /u/<roll>/<rest>  ->  /srv/www/tenants/<roll>/site/<rest> ---
-cat > /etc/nginx/conf.d/cv.conf <<'EOF'
+# nginx: /u/<roll>/<rest>  ->  /srv/www/tenants/<roll>/site/<rest>
+cat > /etc/nginx/conf.d/cv.conf <<'NGINX'
 server {
     listen 80 default_server;
     server_name _;
@@ -37,19 +34,45 @@ server {
         default_type text/plain;
     }
 }
-EOF
-
-# strip the stock default server block so ours is the only one
+NGINX
 rm -f /etc/nginx/conf.d/default.conf || true
-
 systemctl enable --now nginx
 
-# --- install the sync script ---
-install -m 0755 /dev/stdin /usr/local/bin/sync-cv.sh < /opt/cv/sync-cv.sh 2>/dev/null || true
-# (when provisioning by hand, copy ec2/sync-cv.sh to /usr/local/bin/sync-cv.sh)
+# sync script (mirror all tenants from S3, stamp the EC2 footer)
+cat > /usr/local/bin/sync-cv.sh <<'SYNC'
+#!/usr/bin/env bash
+set -uo pipefail
+ENV_FILE="/etc/cv-sync.env"
+WEBROOT="/srv/www"
+LOG="/var/log/cv-sync.log"
+# shellcheck disable=SC1090
+[ -f "$ENV_FILE" ] && . "$ENV_FILE"
+: "${BUCKET:?BUCKET not set in $ENV_FILE}"
+ts() { date -u '+%Y-%m-%dT%H:%M:%SZ'; }
 
-# --- systemd service + timer, every 5 minutes ---
-cat > /etc/systemd/system/cv-sync.service <<'EOF'
+TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" \
+  -H "X-aws-ec2-metadata-token-ttl-seconds: 300")
+IID=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" \
+  http://169.254.169.254/latest/meta-data/instance-id)
+IID="${IID:-unknown-instance}"
+
+mkdir -p "$WEBROOT/tenants"
+if aws s3 sync "s3://${BUCKET}/tenants/" "${WEBROOT}/tenants/" --delete >/dev/null 2>&1; then
+  SYNC="ok"
+else
+  SYNC="FAILED"
+fi
+
+while IFS= read -r -d '' f; do
+  sed -i "s|{{HOSTED_ON}}|EC2 ${IID}|g" "$f"
+done < <(find "${WEBROOT}/tenants" -type f -name index.html -print0 2>/dev/null)
+
+echo "$(ts) sync=${SYNC} instance=${IID}" >> "$LOG"
+SYNC
+chmod +x /usr/local/bin/sync-cv.sh
+
+# systemd service + timer, every 5 minutes
+cat > /etc/systemd/system/cv-sync.service <<'SVC'
 [Unit]
 Description=Sync CV tenants from S3 and stamp EC2 footer
 After=network-online.target
@@ -58,9 +81,9 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 ExecStart=/usr/local/bin/sync-cv.sh
-EOF
+SVC
 
-cat > /etc/systemd/system/cv-sync.timer <<'EOF'
+cat > /etc/systemd/system/cv-sync.timer <<'TMR'
 [Unit]
 Description=Run cv-sync every 5 minutes
 
@@ -71,7 +94,7 @@ AccuracySec=15s
 
 [Install]
 WantedBy=timers.target
-EOF
+TMR
 
 systemctl daemon-reload
 systemctl enable --now cv-sync.timer

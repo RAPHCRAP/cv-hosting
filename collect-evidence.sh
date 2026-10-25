@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Collect grading evidence into evidence.txt.
 # Usage: ./collect-evidence.sh <bucket> <ec2-address> <lambda-address>
-#   e.g. ./collect-evidence.sh cv-22l-6543 http://1.2.3.4 https://abc.lambda-url.us-east-1.on.aws
+#   e.g. ./collect-evidence.sh cv-23l-3063 http://1.2.3.4 https://abc.lambda-url.us-east-1.on.aws
 #
 # Each section fails soft: if a command errors, the section says so and the script continues.
 
@@ -18,11 +18,11 @@ LAMBDA="${3%/}"
 OUT="evidence.txt"
 
 # --- names (edit to match your deployment) ---
-EC2_ROLE="cv-ec2-role-22l-6543"
+EC2_ROLE="cv-ec2-role-23l-3063"
 EC2_POLICY="cv-ec2-read"
-LAMBDA_ROLE="cv-lambda-role-22l-6543"
+LAMBDA_ROLE="cv-lambda-role-23l-3063"
 LAMBDA_POLICY="cv-lambda-read-write"
-FUNCTION="cv-func-22l-6543"
+FUNCTION="cv-func-23l-3063"
 LOG_GROUP="/aws/lambda/${FUNCTION}"
 
 sec() { echo "== $1 =="; }
